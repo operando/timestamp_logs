@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide Column;
 import 'package:flutter/widgets.dart' as f show Column;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:timestamp_log/db/database.dart';
@@ -20,8 +21,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _saveTimestamp() {
     logger.info(DateTime.now());
-    db.insertTimestamp(
-        TimestampsCompanion(timestamp: Value(DateTime.now().toString())));
+    db
+        .insertTimestamp(
+            TimestampsCompanion(timestamp: Value(DateTime.now().toString())))
+        .then((value) => Fluttertoast.showToast(
+            msg: "記録しました",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0));
   }
 
   @override
