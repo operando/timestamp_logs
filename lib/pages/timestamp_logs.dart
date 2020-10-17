@@ -30,9 +30,11 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
                 child: Padding(
                   child: Text(
                     snapshot.data[index].timestamp,
-                    style: TextStyle(fontSize: 22.0),
+                    style: TextStyle(
+                      fontSize: 28,
+                    ),
                   ),
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(28),
                 ),
               );
             },
