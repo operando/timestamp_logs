@@ -15,14 +15,52 @@ class TimestampLogsPage extends StatefulWidget {
 }
 
 class _TimestampLogsPageState extends State<TimestampLogsPage> {
+  final db = Database();
+  Stream<List<Timestamp>> logs;
+
+  @override
+  void initState() {
+    super.initState();
+    logs = db.watchAllTimestamps();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.white),
+            onPressed: () {
+              showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Text('記録をすべて消しますがよろしいですか？'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('キャンセル'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            db.deleteAllTimestamp();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  });
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
-        stream: Database().watchAllTimestamps(),
+        stream: logs,
         builder: (context, AsyncSnapshot<List<Timestamp>> snapshot) {
           return ListView.builder(
             itemBuilder: (_, index) {

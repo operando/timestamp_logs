@@ -19,4 +19,8 @@ class Database extends _$Database {
 
   Future insertTimestamp(TimestampsCompanion timestamp) =>
       into(timestamps).insert(timestamp);
+
+  Future deleteAllTimestamp() => transaction(() async {
+        await delete(timestamps).go();
+      });
 }
