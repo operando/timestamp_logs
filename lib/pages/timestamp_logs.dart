@@ -62,22 +62,29 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
       body: StreamBuilder(
         stream: logs,
         builder: (context, AsyncSnapshot<List<Timestamp>> snapshot) {
-          return ListView.builder(
-            itemBuilder: (_, index) {
-              return Card(
-                child: Padding(
-                  child: Text(
-                    snapshot.data[index].timestamp,
-                    style: TextStyle(
-                      fontSize: 28,
-                    ),
+          return snapshot.data.isEmpty
+              ? Center(
+                  child: const Text(
+                    '記録がありません',
+                    style: TextStyle(fontSize: 30),
                   ),
-                  padding: EdgeInsets.all(28),
-                ),
-              );
-            },
-            itemCount: snapshot.data.length,
-          );
+                )
+              : ListView.builder(
+                  itemBuilder: (_, index) {
+                    return Card(
+                      child: Padding(
+                        child: Text(
+                          snapshot.data[index].timestamp,
+                          style: TextStyle(
+                            fontSize: 28,
+                          ),
+                        ),
+                        padding: EdgeInsets.all(28),
+                      ),
+                    );
+                  },
+                  itemCount: snapshot.data.length,
+                );
         },
       ),
     );
