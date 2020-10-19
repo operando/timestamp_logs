@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:timestamp_log/pages/home.dart';
 import 'package:timestamp_log/pages/timestamp_logs.dart';
 
+import 'db/database.dart';
+
 void main() {
-  runApp(MyApp());
+  runApp(
+    Provider<Database>(
+      create: (context) => Database(),
+      child: MyApp(),
+      dispose: (context, db) => db.close(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart' as f show Column;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_logger/simple_logger.dart';
 import 'package:timestamp_log/db/database.dart';
 
@@ -18,7 +19,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final logger = SimpleLogger();
-  final db = Database();
+
+  Database get db => Provider.of<Database>(context);
 
   void _saveTimestamp() {
     final now = DateFormat('yyyy/MM/dd HH:mm').format(DateTime.now());

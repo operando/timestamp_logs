@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../db/database.dart';
 
@@ -15,14 +16,7 @@ class TimestampLogsPage extends StatefulWidget {
 }
 
 class _TimestampLogsPageState extends State<TimestampLogsPage> {
-  final db = Database();
-  Stream<List<Timestamp>> logs;
-
-  @override
-  void initState() {
-    super.initState();
-    logs = db.watchAllTimestamps();
-  }
+  Database get db => Provider.of<Database>(context);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +54,7 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
         ],
       ),
       body: StreamBuilder(
-        stream: logs,
+        stream: db.watchAllTimestamps(),
         builder: (context, AsyncSnapshot<List<Timestamp>> snapshot) {
           return snapshot.data.isEmpty
               ? Center(
