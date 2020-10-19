@@ -56,7 +56,7 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
       body: StreamBuilder(
         stream: db.watchAllTimestamps(),
         builder: (context, AsyncSnapshot<List<Timestamp>> snapshot) {
-          return snapshot.data.isEmpty
+          return snapshot.data == null || snapshot.data.isEmpty
               ? Center(
                   child: const Text(
                     '記録がありません',
