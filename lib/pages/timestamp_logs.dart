@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../db/database.dart';
 
@@ -17,6 +19,13 @@ class TimestampLogsPage extends StatefulWidget {
 
 class _TimestampLogsPageState extends State<TimestampLogsPage> {
   Database get db => Provider.of<Database>(context);
+  OrderingMode orderingMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _initOrderingMode();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +63,7 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
         ],
       ),
       body: StreamBuilder(
-        stream: db.watchAllTimestamps(),
+        stream: db.watchAllTimestamps(orderingMode),
         builder: (context, AsyncSnapshot<List<Timestamp>> snapshot) {
           return snapshot.data == null || snapshot.data.isEmpty
               ? Center(
@@ -82,5 +91,14 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
         },
       ),
     );
+  }
+
+  Future<void> _initOrderingMode() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      orderingMode = (preferences.getInt('sort_order') ?? 0) == 0
+          ? OrderingMode.desc
+          : OrderingMode.asc;
+    });
   }
 }

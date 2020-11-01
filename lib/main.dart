@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timestamp_log/pages/home.dart';
+import 'package:timestamp_log/pages/settings.dart';
 import 'package:timestamp_log/pages/timestamp_logs.dart';
 
 import 'db/database.dart';
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
       ),
       home: MyHomePage(title: 'Timestamp log'),
       routes: {
-        '/log_list': (BuildContext context) => TimestampLogsPage(title: '記録一覧')
+        '/log_list': (BuildContext context) => TimestampLogsPage(title: '記録一覧'),
+        '/settings': (BuildContext context) => SettingsPage(),
       },
     );
   }

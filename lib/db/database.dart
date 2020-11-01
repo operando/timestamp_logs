@@ -12,10 +12,11 @@ class Database extends _$Database {
   @override
   int get schemaVersion => 1;
 
-  Stream<List<Timestamp>> watchAllTimestamps() => (select(timestamps)
-        ..orderBy(
-            [(t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)]))
-      .watch();
+  Stream<List<Timestamp>> watchAllTimestamps(OrderingMode orderingMode) =>
+      (select(timestamps)
+            ..orderBy(
+                [(t) => OrderingTerm(expression: t.id, mode: orderingMode)]))
+          .watch();
 
   Future insertTimestamp(TimestampsCompanion timestamp) =>
       into(timestamps).insert(timestamp);
