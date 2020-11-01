@@ -25,7 +25,7 @@ class _SettingsState extends State<SettingsPage> {
               SettingsTile(
                 title: '記録一覧の並び順',
                 onTap: () {
-                  _showSortOerderSelectDialog();
+                  _showSortOrderSelectDialog();
                 },
               ),
             ],
@@ -35,7 +35,7 @@ class _SettingsState extends State<SettingsPage> {
     );
   }
 
-  Future<void> _showSortOerderSelectDialog() async {
+  Future<void> _showSortOrderSelectDialog() async {
     switch (await showDialog<int>(
         context: context,
         builder: (BuildContext context) {
