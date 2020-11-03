@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,11 +21,13 @@ class TimestampLogsPage extends StatefulWidget {
 class _TimestampLogsPageState extends State<TimestampLogsPage> {
   Database get db => Provider.of<Database>(context);
   OrderingMode orderingMode;
+  DateFormat dateFormat;
 
   @override
   void initState() {
     super.initState();
     _initOrderingMode();
+    _loadDateFormat();
   }
 
   @override
@@ -77,7 +80,8 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
                     return Card(
                       child: Padding(
                         child: Text(
-                          snapshot.data[index].timestamp,
+                          dateFormat
+                              .format(snapshot.data[index].timestampDatetime),
                           style: TextStyle(
                             fontSize: 28,
                           ),
@@ -99,6 +103,14 @@ class _TimestampLogsPageState extends State<TimestampLogsPage> {
       orderingMode = (preferences.getInt('sort_order') ?? 0) == 0
           ? OrderingMode.desc
           : OrderingMode.asc;
+    });
+  }
+
+  Future<void> _loadDateFormat() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      dateFormat =
+          DateFormat(prefs.getString('date_format') ?? 'yyyy/MM/dd HH:mm');
     });
   }
 }

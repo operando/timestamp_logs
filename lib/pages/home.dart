@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide Column;
 import 'package:flutter/widgets.dart' as f show Column;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_logger/simple_logger.dart';
@@ -23,9 +22,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Database get db => Provider.of<Database>(context);
 
   void _saveTimestamp() {
-    final now = DateFormat('yyyy/MM/dd HH:mm').format(DateTime.now());
+    final now = DateTime.now();
     logger.info(now);
-    db.insertTimestamp(TimestampsCompanion(timestamp: Value(now))).then(
+    db.insertTimestamp(TimestampsCompanion(timestampDatetime: Value(now))).then(
         (value) => Fluttertoast.showToast(
             msg: "記録しました",
             toastLength: Toast.LENGTH_SHORT,

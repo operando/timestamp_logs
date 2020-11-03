@@ -10,7 +10,15 @@ class Database extends _$Database {
             path: 'db.sqlite', logStatements: true));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration =>
+      MigrationStrategy(onUpgrade: (Migrator m, int from, int to) async {
+        if (from == 1) {
+          await m.addColumn(timestamps, timestamps.timestampDatetime);
+        }
+      });
 
   Stream<List<Timestamp>> watchAllTimestamps(OrderingMode orderingMode) =>
       (select(timestamps)

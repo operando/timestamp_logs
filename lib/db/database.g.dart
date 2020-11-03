@@ -10,16 +10,21 @@ part of 'database.dart';
 class Timestamp extends DataClass implements Insertable<Timestamp> {
   final int id;
   final String timestamp;
-  Timestamp({@required this.id, @required this.timestamp});
+  final DateTime timestampDatetime;
+  Timestamp(
+      {@required this.id, this.timestamp, @required this.timestampDatetime});
   factory Timestamp.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return Timestamp(
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       timestamp: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}timestamp']),
+      timestampDatetime: dateTimeType.mapFromDatabaseResponse(
+          data['${effectivePrefix}timestamp_datetime']),
     );
   }
   @override
@@ -31,6 +36,9 @@ class Timestamp extends DataClass implements Insertable<Timestamp> {
     if (!nullToAbsent || timestamp != null) {
       map['timestamp'] = Variable<String>(timestamp);
     }
+    if (!nullToAbsent || timestampDatetime != null) {
+      map['timestamp_datetime'] = Variable<DateTime>(timestampDatetime);
+    }
     return map;
   }
 
@@ -40,6 +48,9 @@ class Timestamp extends DataClass implements Insertable<Timestamp> {
       timestamp: timestamp == null && nullToAbsent
           ? const Value.absent()
           : Value(timestamp),
+      timestampDatetime: timestampDatetime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(timestampDatetime),
     );
   }
 
@@ -49,6 +60,8 @@ class Timestamp extends DataClass implements Insertable<Timestamp> {
     return Timestamp(
       id: serializer.fromJson<int>(json['id']),
       timestamp: serializer.fromJson<String>(json['timestamp']),
+      timestampDatetime:
+          serializer.fromJson<DateTime>(json['timestampDatetime']),
     );
   }
   @override
@@ -57,57 +70,72 @@ class Timestamp extends DataClass implements Insertable<Timestamp> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'timestamp': serializer.toJson<String>(timestamp),
+      'timestampDatetime': serializer.toJson<DateTime>(timestampDatetime),
     };
   }
 
-  Timestamp copyWith({int id, String timestamp}) => Timestamp(
+  Timestamp copyWith({int id, String timestamp, DateTime timestampDatetime}) =>
+      Timestamp(
         id: id ?? this.id,
         timestamp: timestamp ?? this.timestamp,
+        timestampDatetime: timestampDatetime ?? this.timestampDatetime,
       );
   @override
   String toString() {
     return (StringBuffer('Timestamp(')
           ..write('id: $id, ')
-          ..write('timestamp: $timestamp')
+          ..write('timestamp: $timestamp, ')
+          ..write('timestampDatetime: $timestampDatetime')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode, timestamp.hashCode));
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode, $mrjc(timestamp.hashCode, timestampDatetime.hashCode)));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Timestamp &&
           other.id == this.id &&
-          other.timestamp == this.timestamp);
+          other.timestamp == this.timestamp &&
+          other.timestampDatetime == this.timestampDatetime);
 }
 
 class TimestampsCompanion extends UpdateCompanion<Timestamp> {
   final Value<int> id;
   final Value<String> timestamp;
+  final Value<DateTime> timestampDatetime;
   const TimestampsCompanion({
     this.id = const Value.absent(),
     this.timestamp = const Value.absent(),
+    this.timestampDatetime = const Value.absent(),
   });
   TimestampsCompanion.insert({
     this.id = const Value.absent(),
-    @required String timestamp,
-  }) : timestamp = Value(timestamp);
+    this.timestamp = const Value.absent(),
+    @required DateTime timestampDatetime,
+  }) : timestampDatetime = Value(timestampDatetime);
   static Insertable<Timestamp> custom({
     Expression<int> id,
     Expression<String> timestamp,
+    Expression<DateTime> timestampDatetime,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (timestamp != null) 'timestamp': timestamp,
+      if (timestampDatetime != null) 'timestamp_datetime': timestampDatetime,
     });
   }
 
-  TimestampsCompanion copyWith({Value<int> id, Value<String> timestamp}) {
+  TimestampsCompanion copyWith(
+      {Value<int> id,
+      Value<String> timestamp,
+      Value<DateTime> timestampDatetime}) {
     return TimestampsCompanion(
       id: id ?? this.id,
       timestamp: timestamp ?? this.timestamp,
+      timestampDatetime: timestampDatetime ?? this.timestampDatetime,
     );
   }
 
@@ -120,6 +148,9 @@ class TimestampsCompanion extends UpdateCompanion<Timestamp> {
     if (timestamp.present) {
       map['timestamp'] = Variable<String>(timestamp.value);
     }
+    if (timestampDatetime.present) {
+      map['timestamp_datetime'] = Variable<DateTime>(timestampDatetime.value);
+    }
     return map;
   }
 
@@ -127,7 +158,8 @@ class TimestampsCompanion extends UpdateCompanion<Timestamp> {
   String toString() {
     return (StringBuffer('TimestampsCompanion(')
           ..write('id: $id, ')
-          ..write('timestamp: $timestamp')
+          ..write('timestamp: $timestamp, ')
+          ..write('timestampDatetime: $timestampDatetime')
           ..write(')'))
         .toString();
   }
@@ -155,12 +187,26 @@ class $TimestampsTable extends Timestamps
     return GeneratedTextColumn(
       'timestamp',
       $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _timestampDatetimeMeta =
+      const VerificationMeta('timestampDatetime');
+  GeneratedDateTimeColumn _timestampDatetime;
+  @override
+  GeneratedDateTimeColumn get timestampDatetime =>
+      _timestampDatetime ??= _constructTimestampDatetime();
+  GeneratedDateTimeColumn _constructTimestampDatetime() {
+    return GeneratedDateTimeColumn(
+      'timestamp_datetime',
+      $tableName,
       false,
     );
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, timestamp];
+  List<GeneratedColumn> get $columns => [id, timestamp, timestampDatetime];
   @override
   $TimestampsTable get asDslTable => this;
   @override
@@ -178,8 +224,14 @@ class $TimestampsTable extends Timestamps
     if (data.containsKey('timestamp')) {
       context.handle(_timestampMeta,
           timestamp.isAcceptableOrUnknown(data['timestamp'], _timestampMeta));
+    }
+    if (data.containsKey('timestamp_datetime')) {
+      context.handle(
+          _timestampDatetimeMeta,
+          timestampDatetime.isAcceptableOrUnknown(
+              data['timestamp_datetime'], _timestampDatetimeMeta));
     } else if (isInserting) {
-      context.missing(_timestampMeta);
+      context.missing(_timestampDatetimeMeta);
     }
     return context;
   }
