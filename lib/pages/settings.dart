@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,11 +15,13 @@ class SettingsPage extends StatefulWidget {
 class _SettingsState extends State<SettingsPage> {
   DateTime sampleDateTime = DateTime.parse('2020-11-03 13:27:00');
   String dateFormat;
+  PackageInfo packageInfo;
 
   @override
   void initState() {
     super.initState();
     _loadDateFormat();
+    _loadPackageInfo();
   }
 
   Future<void> _loadDateFormat() async {
@@ -26,6 +29,10 @@ class _SettingsState extends State<SettingsPage> {
     setState(() {
       dateFormat = prefs.getString('date_format') ?? 'yyyy/MM/dd HH:mm';
     });
+  }
+
+  Future<void> _loadPackageInfo() async {
+    packageInfo = await PackageInfo.fromPlatform();
   }
 
   @override
@@ -78,7 +85,26 @@ class _SettingsState extends State<SettingsPage> {
                   ],
                 ),
               ),
-            )
+            ),
+            Container(
+              color: Colors.white,
+              margin: EdgeInsets.only(top: 32),
+              padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "アプリのバージョン",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  Text(
+                    '${packageInfo.version}(${packageInfo.buildNumber})',
+                    style: TextStyle(fontSize: 16, color: Color(0xFF999999)),
+                  ),
+                ],
+              ),
+            ),
           ],
         ));
   }
