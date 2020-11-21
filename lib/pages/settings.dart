@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -103,6 +104,36 @@ class _SettingsState extends State<SettingsPage> {
                     style: TextStyle(fontSize: 16, color: Color(0xFF999999)),
                   ),
                 ],
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
+              child: GestureDetector(
+                onTap: () {
+                  launch('https://github.com/operando/timestamp_logs');
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "ソースコード",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 0.5,
+                        left: 2.25,
+                      ),
+                      child: Icon(
+                        CupertinoIcons.arrow_up_right_square,
+                        color: Color(0xFFC7C7CC),
+                        size: 21.0,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
