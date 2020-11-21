@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timestamp_log/pages/home.dart';
@@ -6,7 +7,9 @@ import 'package:timestamp_log/pages/timestamp_logs.dart';
 
 import 'db/database.dart';
 
-void main() {
+Future<void> main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(
     Provider<Database>(
       create: (context) => Database(),
